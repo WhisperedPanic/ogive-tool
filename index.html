@@ -521,7 +521,6 @@ margin-bottom: 8px;
     <div class="panel-header"><span class="dot"></span>DESIGN INPUTS</div>
     <div class="panel-body">
 
-```
   <div class="section-label">Identification</div>
   <div class="field">
     <label>Bullet ID / Title</label>
@@ -631,7 +630,6 @@ margin-bottom: 8px;
   <button class="btn-run" onclick="runCalculations()"><span>▶ COMPUTE</span></button>
   <button class="btn-reset" onclick="resetForm()">RESET TO DEFAULTS</button>
 </div>
-```
 
   </div>
 
@@ -685,7 +683,7 @@ function resetForm() {
   document.getElementById('BTA').value = '9.0';
   document.getElementById('ED').value  = '0.245';
   document.getElementById('QW').value  = '0';
-  document.getElementById('V').value   = '2600';
+  document.getElementById('V').value   = '2700';
   document.getElementById('RBD').value  = '0.300';
   document.getElementById('SNL').value = '0';
   document.querySelector('input[name="ogiveType"][value="1"]').checked = true;
@@ -1090,7 +1088,7 @@ function computeWindDrift(C1, V) {
 }
 
 // ============================================================
-// THROAT ANGLE  (THROAT.BAS — Daniel Lilja, 1990)
+// THROAT ANGLE  (THROAT.BAS — Daniel Lilja, 1989)
 // Returns angle in degrees per side at the point where the ogive
 // profile crosses the bore diameter, plus the axial length XX
 // from the ogive/bearing junction to that contact point.
@@ -1336,7 +1334,7 @@ function renderResults(r) {
 
       <!-- THROAT ANGLE -->
       <div class="result-section" style="grid-column:span 2;">
-        <div class="result-section-title">Throat Angle — THROAT.BAS (Lilja, 1990)</div>
+        <div class="result-section-title">Throat Angle — THROAT.BAS (Lilja, 1989)</div>
         ${r.throat && r.throat.ANG !== null ? `
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:4px;">
           <div class="result-bc-item" style="border-color:rgba(74,255,154,0.2);background:rgba(74,255,154,0.04);">
