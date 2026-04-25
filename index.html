@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BDESIGN — Bullet Design Program</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+:root {
+–bg: #0a0c0e;
+–panel: #0f1316;
+–border: #1e2a30;
+–border-bright: #2e4a58;
+–green: #4aff9a;
+–green-dim: #1a5c3a;
+–amber: #ffb347;
+–amber-dim: #7a4a10;
+–blue: #4ab4ff;
+–blue-dim: #0a2a4a;
+–red: #ff4a4a;
+–text: #c8d8e0;
+–text-dim: #5a7a88;
+–mono: ‘Share Tech Mono’, monospace;
+–sans: ‘Rajdhani’, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: var(–mono);
+font-size: 13px;
+min-height: 100vh;
+padding: 20px;
+background-image:
+radial-gradient(ellipse at 20% 20%, rgba(74,180,255,0.04) 0%, transparent 50%),
+radial-gradient(ellipse at 80% 80%, rgba(74,255,154,0.03) 0%, transparent 50%);
+}
+
+.app-header {
+border-bottom: 1px solid var(–border-bright);
+padding-bottom: 14px;
+margin-bottom: 24px;
+display: flex;
+align-items: flex-end;
+gap: 20px;
+flex-wrap: wrap;
+}
+
+.app-title {
+font-family: var(–sans);
+font-weight: 700;
+font-size: 28px;
+letter-spacing: 6px;
+color: var(–green);
+text-transform: uppercase;
+text-shadow: 0 0 20px rgba(74,255,154,0.4);
+}
+
+.app-sub {
+font-size: 11px;
+color: var(–text-dim);
+letter-spacing: 2px;
+padding-bottom: 3px;
+}
+
+.badge {
+margin-left: auto;
+font-size: 10px;
+color: var(–amber);
+letter-spacing: 1px;
+border: 1px solid var(–amber-dim);
+padding: 3px 8px;
+background: rgba(255,179,71,0.05);
+}
+
+.layout {
+display: grid;
+grid-template-columns: 380px 1fr;
+gap: 16px;
+align-items: start;
+}
+
+@media (max-width: 900px) {
+.layout { grid-template-columns: 1fr; }
+}
+
+/* PANELS */
+.panel {
+background: var(–panel);
+border: 1px solid var(–border);
+padding: 0;
+position: relative;
+}
+
+.panel::before {
+content: ‘’;
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 2px;
+background: linear-gradient(90deg, var(–green), transparent);
+}
+
+.panel-header {
+padding: 10px 14px;
+border-bottom: 1px solid var(–border);
+font-family: var(–sans);
+font-weight: 600;
+font-size: 12px;
+letter-spacing: 3px;
+color: var(–green);
+text-transform: uppercase;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.panel-header .dot {
+width: 6px; height: 6px;
+border-radius: 50%;
+background: var(–green);
+box-shadow: 0 0 6px var(–green);
+}
+
+.panel-body { padding: 14px; }
+
+/* FORM */
+.section-label {
+font-family: var(–sans);
+font-size: 10px;
+letter-spacing: 3px;
+color: var(–amber);
+text-transform: uppercase;
+margin: 16px 0 8px;
+border-bottom: 1px solid var(–border);
+padding-bottom: 4px;
+}
+
+.section-label:first-child { margin-top: 0; }
+
+.field {
+display: flex;
+align-items: center;
+gap: 8px;
+margin-bottom: 7px;
+}
+
+.field label {
+font-size: 11px;
+color: var(–text-dim);
+width: 180px;
+flex-shrink: 0;
+letter-spacing: 0.5px;
+}
+
+.field input[type=“text”],
+.field input[type=“number”],
+.field select {
+background: #060809;
+border: 1px solid var(–border);
+color: var(–text);
+font-family: var(–mono);
+font-size: 12px;
+padding: 5px 8px;
+flex: 1;
+outline: none;
+transition: border-color 0.15s;
+}
+
+.field input:focus,
+.field select:focus {
+border-color: var(–green-dim);
+background: #090d0f;
+}
+
+.field input[type=“number”] { text-align: right; }
+
+.field select {
+cursor: pointer;
+}
+
+.field select option { background: #0f1316; }
+
+.radio-group {
+display: flex;
+gap: 12px;
+flex-wrap: wrap;
+}
+
+.radio-group label {
+width: auto;
+display: flex;
+align-items: center;
+gap: 5px;
+cursor: pointer;
+font-size: 11px;
+color: var(–text);
+}
+
+.radio-group input[type=“radio”] { accent-color: var(–green); }
+
+.hint {
+font-size: 10px;
+color: var(–text-dim);
+margin-bottom: 8px;
+line-height: 1.5;
+padding-left: 2px;
+}
+
+/* BUTTON */
+.btn-run {
+width: 100%;
+padding: 12px;
+background: transparent;
+border: 1px solid var(–green);
+color: var(–green);
+font-family: var(–sans);
+font-size: 14px;
+font-weight: 700;
+letter-spacing: 4px;
+text-transform: uppercase;
+cursor: pointer;
+margin-top: 18px;
+transition: all 0.2s;
+position: relative;
+overflow: hidden;
+}
+
+.btn-run::before {
+content: ‘’;
+position: absolute;
+inset: 0;
+background: var(–green);
+transform: translateX(-100%);
+transition: transform 0.2s;
+z-index: 0;
+}
+
+.btn-run:hover::before { transform: translateX(0); }
+.btn-run:hover { color: var(–bg); }
+.btn-run span { position: relative; z-index: 1; }
+
+.btn-reset {
+width: 100%;
+padding: 7px;
+background: transparent;
+border: 1px solid var(–border);
+color: var(–text-dim);
+font-family: var(–mono);
+font-size: 11px;
+letter-spacing: 2px;
+cursor: pointer;
+margin-top: 8px;
+transition: all 0.2s;
+}
+
+.btn-reset:hover { border-color: var(–red); color: var(–red); }
+
+/* RESULTS */
+.results-empty {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+min-height: 400px;
+color: var(–text-dim);
+gap: 12px;
+}
+
+.results-empty .icon {
+font-size: 48px;
+opacity: 0.2;
+}
+
+.results-empty p {
+font-size: 11px;
+letter-spacing: 2px;
+text-transform: uppercase;
+}
+
+/* RESULT GRID */
+.result-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+}
+
+.result-section {
+background: #080b0d;
+border: 1px solid var(–border);
+padding: 12px;
+}
+
+.result-section-title {
+font-family: var(–sans);
+font-size: 10px;
+letter-spacing: 3px;
+text-transform: uppercase;
+color: var(–blue);
+margin-bottom: 10px;
+padding-bottom: 6px;
+border-bottom: 1px solid var(–border);
+}
+
+.result-row {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 5px;
+gap: 8px;
+}
+
+.result-key {
+font-size: 10px;
+color: var(–text-dim);
+letter-spacing: 0.3px;
+flex: 1;
+}
+
+.result-val {
+font-size: 12px;
+color: var(–green);
+font-weight: bold;
+text-align: right;
+white-space: nowrap;
+}
+
+.result-val.amber { color: var(–amber); }
+.result-val.blue { color: var(–blue); }
+.result-val.red { color: var(–red); }
+
+.result-bc-row {
+display: flex;
+gap: 16px;
+margin-top: 4px;
+}
+
+.result-bc-item {
+flex: 1;
+background: rgba(74,180,255,0.05);
+border: 1px solid var(–blue-dim);
+padding: 8px 10px;
+text-align: center;
+}
+
+.result-bc-label {
+font-size: 10px;
+color: var(–text-dim);
+letter-spacing: 1px;
+text-transform: uppercase;
+}
+
+.result-bc-value {
+font-size: 22px;
+font-family: var(–sans);
+font-weight: 700;
+color: var(–blue);
+margin-top: 2px;
+}
+
+.result-wind-row {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 8px;
+margin-top: 4px;
+}
+
+.result-wind-item {
+background: rgba(255,179,71,0.05);
+border: 1px solid var(–amber-dim);
+padding: 8px;
+text-align: center;
+}
+
+.result-wind-label {
+font-size: 10px;
+color: var(–text-dim);
+}
+
+.result-wind-value {
+font-size: 18px;
+font-family: var(–sans);
+font-weight: 700;
+color: var(–amber);
+margin-top: 2px;
+}
+
+.result-wind-unit {
+font-size: 9px;
+color: var(–text-dim);
+}
+
+.twist-highlight {
+background: rgba(74,255,154,0.05);
+border: 1px solid var(–green-dim);
+padding: 10px 14px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-top: 8px;
+}
+
+.twist-label {
+font-size: 11px;
+color: var(–text-dim);
+letter-spacing: 1px;
+}
+
+.twist-value {
+font-family: var(–sans);
+font-size: 24px;
+font-weight: 700;
+color: var(–green);
+text-shadow: 0 0 12px rgba(74,255,154,0.3);
+}
+
+.twist-unit {
+font-size: 11px;
+color: var(–green-dim);
+}
+
+.error-box {
+background: rgba(255,74,74,0.08);
+border: 1px solid var(–red);
+padding: 12px;
+color: var(–red);
+font-size: 12px;
+margin-top: 12px;
+letter-spacing: 0.5px;
+}
+
+.ogive-canvas-wrap {
+grid-column: span 2;
+background: #080b0d;
+border: 1px solid var(–border);
+padding: 12px;
+}
+
+canvas#ogiveCanvas {
+display: block;
+width: 100%;
+height: 160px;
+background: #060809;
+border: 1px solid var(–border);
+}
+
+.canvas-label {
+font-size: 10px;
+color: var(–text-dim);
+letter-spacing: 2px;
+text-transform: uppercase;
+margin-bottom: 8px;
+}
+
+.divider { height: 1px; background: var(–border); margin: 12px 0; }
+
+.id-tag {
+font-family: var(–sans);
+font-size: 16px;
+font-weight: 600;
+color: var(–text);
+letter-spacing: 2px;
+margin-bottom: 12px;
+padding-bottom: 8px;
+border-bottom: 1px solid var(–border-bright);
+}
+
+.construction-tag {
+display: inline-block;
+font-size: 10px;
+letter-spacing: 2px;
+text-transform: uppercase;
+padding: 3px 8px;
+border: 1px solid var(–amber-dim);
+color: var(–amber);
+background: rgba(255,179,71,0.05);
+margin-bottom: 12px;
+}
+
+/* Scanline overlay */
+body::after {
+content: ‘’;
+position: fixed;
+inset: 0;
+background: repeating-linear-gradient(
+0deg,
+transparent,
+transparent 2px,
+rgba(0,0,0,0.03) 2px,
+rgba(0,0,0,0.03) 4px
+);
+pointer-events: none;
+z-index: 9999;
+}
+
+.toggle-section {
+background: rgba(255,255,255,0.02);
+border: 1px solid var(–border);
+padding: 10px;
+margin-bottom: 8px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="app-header">
+  <div>
+    <div class="app-title">BDESIGN</div>
+    <div class="app-sub">BULLET DESIGN PROGRAM // ORIGINAL: DANIEL LILJA, OCT 1989</div>
+  </div>
+  <div class="badge">BC · STABILITY · WIND DRIFT</div>
+</div>
+
+<div class="layout">
+  <!-- INPUT PANEL -->
+  <div class="panel">
+    <div class="panel-header"><span class="dot"></span>DESIGN INPUTS</div>
+    <div class="panel-body">
+
+```
+  <div class="section-label">Identification</div>
+  <div class="field">
+    <label>Bullet ID / Title</label>
+    <input type="text" id="bulletId" value="7.62mm NATO 175gr BTHP" />
+  </div>
+
+  <div class="section-label">Dimensions</div>
+  <div class="field">
+    <label>Bullet Diameter (in)</label>
+    <input type="number" id="BD" value="0.308" step="0.001" />
+  </div>
+  <div class="field">
+    <label>Overall Length (in)</label>
+    <input type="number" id="BL" value="1.240" step="0.001" />
+  </div>
+  <div class="field">
+    <label>Meplat Diameter (in)</label>
+    <input type="number" id="MD" value="0.060" step="0.001" />
+  </div>
+  <div class="field">
+    <label>Bore Diameter (in)<br><span style="font-size:10px;color:var(--text-dim)">for throat angle calc</span></label>
+    <input type="number" id="RBD" value="0.300" step="0.0001" />
+  </div>
+
+  <div class="section-label">Ogive</div>
+  <div class="field">
+    <label>Ogive Type</label>
+    <div class="radio-group">
+      <label><input type="radio" name="ogiveType" value="1" checked onchange="updateOgiveFields()"> Tangent</label>
+      <label><input type="radio" name="ogiveType" value="2" onchange="updateOgiveFields()"> Secant</label>
+    </div>
+  </div>
+  <div class="field" id="secantLengthField" style="display:none;">
+    <label>Secant Ogive Length (in)<br><span style="font-size:10px;color:var(--text-dim)">0 = auto-calculate</span></label>
+    <input type="number" id="SNL" value="0" step="0.001" />
+  </div>
+  <div class="field">
+    <label>Ogive Radius (calibers)</label>
+    <input type="number" id="RC" value="9.0" step="0.5" />
+  </div>
+
+  <div class="section-label">Boattail</div>
+  <div class="field">
+    <label>Boattail Present</label>
+    <div class="radio-group">
+      <label><input type="radio" name="btType" value="1" checked onchange="updateBTFields()"> Yes</label>
+      <label><input type="radio" name="btType" value="2" onchange="updateBTFields()"> No (Flat Base)</label>
+    </div>
+  </div>
+  <div id="btFields">
+    <div class="field">
+      <label>Boattail Length (in)</label>
+      <input type="number" id="BTL" value="0.120" step="0.001" />
+    </div>
+    <div class="field">
+      <label>BT Specification</label>
+      <div class="radio-group">
+        <label><input type="radio" name="btSpec" value="1" checked onchange="updateBTSpec()"> Angle</label>
+        <label><input type="radio" name="btSpec" value="2" onchange="updateBTSpec()"> End Dia.</label>
+      </div>
+    </div>
+    <div class="field" id="btAngleField">
+      <label>BT Angle (degrees)</label>
+      <input type="number" id="BTA" value="9.0" step="0.1" />
+    </div>
+    <div class="field" id="btEdField" style="display:none;">
+      <label>BT End Diameter (in)</label>
+      <input type="number" id="ED" value="0.245" step="0.001" />
+    </div>
+  </div>
+
+  <div class="section-label">Construction</div>
+  <div class="field">
+    <label>Bullet Construction</label>
+    <select id="QBC" onchange="updateConstruction()">
+      <option value="1">Lead Core, Jacketed HP</option>
+      <option value="2" selected>Lead Core, Jacketed SP/FMJ</option>
+      <option value="3">Steel Core, Jacketed FMJ</option>
+      <option value="4">Monolithic / Other</option>
+    </select>
+  </div>
+  <div class="field" id="sgField" style="display:none;">
+    <label>Specific Gravity</label>
+    <input type="number" id="SG_custom" value="8.9" step="0.1" />
+  </div>
+
+  <div class="section-label">Weight & Velocity</div>
+  <div class="hint">Leave weight as 0 to calculate automatically from geometry.</div>
+  <div class="field">
+    <label>Bullet Weight (gr)</label>
+    <input type="number" id="QW" value="0" step="1" />
+  </div>
+  <div class="field">
+    <label>Muzzle Velocity (fps)</label>
+    <input type="number" id="V" value="2600" step="10" />
+  </div>
+
+  <div class="section-label">Atmosphere</div>
+  <div class="field">
+    <label>Atmosphere Standard</label>
+    <div class="radio-group">
+      <label><input type="radio" name="atm" value="1" checked> Std Metro SL</label>
+      <label><input type="radio" name="atm" value="2"> ICAO SL</label>
+    </div>
+  </div>
+
+  <button class="btn-run" onclick="runCalculations()"><span>▶ COMPUTE</span></button>
+  <button class="btn-reset" onclick="resetForm()">RESET TO DEFAULTS</button>
+</div>
+```
+
+  </div>
+
+  <!-- RESULTS PANEL -->
+
+  <div class="panel">
+    <div class="panel-header"><span class="dot"></span>ANALYSIS OUTPUT</div>
+    <div class="panel-body">
+      <div id="resultsContainer">
+        <div class="results-empty">
+          <div class="icon">⊙</div>
+          <p>Awaiting Design Input</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// UI STATE
+// ============================================================
+function updateOgiveFields() {
+  const v = document.querySelector('input[name="ogiveType"]:checked').value;
+  document.getElementById('secantLengthField').style.display = v === '2' ? 'flex' : 'none';
+}
+
+function updateBTFields() {
+  const v = document.querySelector('input[name="btType"]:checked').value;
+  document.getElementById('btFields').style.display = v === '1' ? 'block' : 'none';
+}
+
+function updateBTSpec() {
+  const v = document.querySelector('input[name="btSpec"]:checked').value;
+  document.getElementById('btAngleField').style.display = v === '1' ? 'flex' : 'none';
+  document.getElementById('btEdField').style.display   = v === '2' ? 'flex' : 'none';
+}
+
+function updateConstruction() {
+  const v = document.getElementById('QBC').value;
+  document.getElementById('sgField').style.display = v === '4' ? 'flex' : 'none';
+}
+
+function resetForm() {
+  document.getElementById('bulletId').value = '7.62mm NATO 175gr BTHP';
+  document.getElementById('BD').value  = '0.308';
+  document.getElementById('BL').value  = '1.240';
+  document.getElementById('MD').value  = '0.060';
+  document.getElementById('RC').value  = '9.0';
+  document.getElementById('BTL').value = '0.120';
+  document.getElementById('BTA').value = '9.0';
+  document.getElementById('ED').value  = '0.245';
+  document.getElementById('QW').value  = '0';
+  document.getElementById('V').value   = '2600';
+  document.getElementById('RBD').value  = '0.300';
+  document.getElementById('SNL').value = '0';
+  document.querySelector('input[name="ogiveType"][value="1"]').checked = true;
+  document.querySelector('input[name="btType"][value="1"]').checked    = true;
+  document.querySelector('input[name="btSpec"][value="1"]').checked    = true;
+  document.querySelector('input[name="atm"][value="1"]').checked       = true;
+  document.getElementById('QBC').value = '2';
+  updateOgiveFields(); updateBTFields(); updateBTSpec(); updateConstruction();
+  document.getElementById('resultsContainer').innerHTML = `
+    <div class="results-empty"><div class="icon">⊙</div><p>Awaiting Design Input</p></div>`;
+}
+
+// ============================================================
+// MATH HELPERS
+// ============================================================
+const PI  = Math.PI;
+const sq  = x => x * x;
+const sqrt = Math.sqrt;
+const exp  = Math.exp;
+const log  = Math.log;
+const abs  = Math.abs;
+const atan = Math.atan;
+const tan  = Math.tan;
+const sin  = Math.sin;
+const cos  = Math.cos;
+
+function fmt(v, dec=3) { return isNaN(v) ? '—' : v.toFixed(dec); }
+
+// ============================================================
+// CORE CALCULATION ENGINE  (ported from BDESIGN.BAS)
+// ============================================================
+function runCalculations() {
+  try {
+    const result = compute();
+    renderResults(result);
+  } catch(e) {
+    document.getElementById('resultsContainer').innerHTML =
+      `<div class="error-box">⚠ COMPUTATION ERROR: ${e.message}</div>`;
+    console.error(e);
+  }
+}
+
+function compute() {
+  // --- Read inputs ---
+  const B$   = document.getElementById('bulletId').value || 'UNNAMED';
+  const BD   = parseFloat(document.getElementById('BD').value);
+  const BL   = parseFloat(document.getElementById('BL').value);
+  const MD   = parseFloat(document.getElementById('MD').value);
+  const RC_in= parseFloat(document.getElementById('RC').value);
+  const QR   = parseInt(document.querySelector('input[name="ogiveType"]:checked').value);
+  const QBT  = parseInt(document.querySelector('input[name="btType"]:checked').value);
+  const QED  = QBT === 1 ? parseInt(document.querySelector('input[name="btSpec"]:checked').value) : 2;
+  const BTL  = QBT === 1 ? parseFloat(document.getElementById('BTL').value) : 0;
+  const BTA_in = QED === 1 ? parseFloat(document.getElementById('BTA').value) : 0;
+  const ED_in  = QED === 2 && QBT === 1 ? parseFloat(document.getElementById('ED').value) : 0;
+  const QBC  = parseInt(document.getElementById('QBC').value);
+  const QW   = parseFloat(document.getElementById('QW').value) || 0;
+  const V    = parseFloat(document.getElementById('V').value);
+  const QATM = parseInt(document.querySelector('input[name="atm"]:checked').value);
+  let   SNL  = parseFloat(document.getElementById('SNL').value) || 0;
+
+  // Specific gravity
+  let SG;
+  if (QBC === 1) SG = BL >= 1.25 ? 10.11 : 10.0;
+  else if (QBC === 2) SG = 10.25;
+  else if (QBC === 3) SG = 9.9;
+  else SG = parseFloat(document.getElementById('SG_custom').value);
+
+  let RC = RC_in;
+  let NL, XC, YC, LB, R, BTA, ED;
+
+  // --- Ogive geometry ---
+  const DIFRAD = (BD - MD) / 2;
+
+  if (QR === 1) {
+    // Tangent ogive
+    R  = RC * BD;
+    NL = sqrt(R * 2 * DIFRAD - sq(DIFRAD));
+    LB = BL - NL - (QBT === 1 ? BTL : 0);
+    XC = BL - NL;
+    YC = -(R - 0.5 * BD);
+  } else {
+    // Secant ogive
+    R  = RC * BD;
+    if (SNL === 0) {
+      const RT2 = RC * 0.533 * BD;
+      SNL = sqrt(RT2 * 2 * DIFRAD - sq(DIFRAD));
+    }
+    NL = SNL;
+    const C   = DIFRAD;
+    const HYP = sqrt(sq(NL) + sq(C));
+    const H   = R - 0.5 * sqrt(4 * sq(R) - sq(HYP));
+    const A_  = atan(C / NL);
+    const HX  = H / cos(A_);
+    const X   = R * sin(A_);
+    const B_  = sqrt(sq(R) - sq(X));
+    YC = -(B_ - HX - (BD + MD) / 4);
+    XC = BL - (NL / 2 + X);
+    LB = BL - NL - (QBT === 1 ? BTL : 0);
+  }
+
+  if (LB <= 0) throw new Error('Bearing length ≤ 0. Ogive or boattail length too long for overall length. Adjust dimensions.');
+
+  // Boattail end diameter
+  if (QBT === 1) {
+    if (QED === 2) {
+      ED  = ED_in;
+      BTA = (180 / PI) * atan(((BD - ED) / 2) / BTL);
+    } else {
+      BTA = BTA_in;
+      ED  = BD - 2 * (BTL * tan(BTA / 57.3));
+    }
+  } else {
+    BTA = 0; ED = BD;
+  }
+
+  // --- Ogive volume (10-disc integration) ---
+  function calcOgiveVolume(QR_, NL_, R_, YC_, XC_, BL_) {
+    const XSEC = (QR_ === 2) ? (BL_ - NL_ - XC_) : 0;
+    const x = NL_ / 10;
+    let OGV = 0;
+    for (let i = 0; i < 10; i++) {
+      const axX = (i + 0.5) * x + XSEC;
+      const ay  = sqrt(Math.max(0, sq(R_) - sq(axX))) + YC_;
+      OGV += PI * x * sq(ay);
+    }
+    return OGV;
+  }
+
+  const OGV = calcOgiveVolume(QR, NL, R, YC, XC, BL);
+
+  // --- Volumes ---
+  const LBV = 0.7854 * sq(BD) * LB;
+  const BTV = QBT === 1 ? 0.2618 * BTL * (sq(BD) + BD * ED + sq(ED)) : 0;
+  const VV  = LBV + BTV + OGV;
+
+  let W = QW > 0 ? QW : (VV * SG * 252.7);
+
+  // --- Sectional density ---
+  const SD = W / (7000 * sq(BD));
+
+  // --- Centre of gravity (approximate 10-slice method) ---
+  const discs = [];
+  const xStep = NL / 10;
+  const XSEC2 = (QR === 2) ? (BL - NL - XC) : 0;
+  for (let i = 0; i < 10; i++) {
+    const axX = (i + 0.5) * xStep + XSEC2;
+    const ay  = sqrt(Math.max(0, sq(R) - sq(axX))) + YC;
+    discs.push(PI * xStep * sq(ay));
+  }
+
+  let cumVol = 0;
+  let OGVCG = 5 * NL / 10; // default midpoint
+  for (let i = 0; i < 10; i++) {
+    cumVol += discs[i];
+    if (cumVol >= OGV / 2) { OGVCG = (i + 1) * NL / 10; break; }
+  }
+
+  const LBCG  = LB / 2;
+  const A1cg  = OGVCG + LBCG;
+  const ACG   = (OGV * A1cg) / (LBV + OGV);
+  const NBTCG = ACG + LBCG;
+
+  let CG;
+  if (QBT === 2) {
+    CG = NBTCG;
+  } else {
+    const hbd  = BD / 2, hed = ED / 2;
+    const BTCG = (BTL * (sq(hbd) + 2 * hbd * hed + 3 * sq(hed))) /
+                 (4 * (sq(hbd) + hbd * hed + sq(hed)));
+    const A2   = BTCG + NBTCG;
+    CG = ((LBV + OGV) * A2) / VV + (BTL - BTCG);
+  }
+
+  // --- Ballistic Coefficient (McCoy / MCDRGS2) ---
+  const DREF = BD * 25.4;
+  const LT   = BL / BD;
+  const LN   = NL / BD;
+  const LBT_cal = QBT === 1 ? BTL / BD : 0;
+  const DB   = QBT === 1 ? ED / BD : 1;
+  const DM   = MD / BD;
+  const DIF2 = (BD - MD) / 2;
+  const RR   = (sq(NL) + sq(DIF2)) / (2 * DIF2);
+  const RTCAL = RR / BD;
+  const RTR  = QR === 1 ? 1 : RTCAL / RC;
+
+  const M_num = V / 1116.44;
+  const M2    = sq(M_num);
+  const TA    = (1 - DM) / LN;
+  const RE    = 23296.3 * M_num * LT * DREF;
+  const RET   = 0.4343 * log(RE);
+  const CFT   = (0.455 / Math.pow(RET, 2.58)) * Math.pow(1 + 0.21 * M2, -0.32);
+  const DUM   = 1 + ((0.3333 + 0.02 / sq(LN)) * RTR);
+  const SWN   = 1.5708 * LN * DUM * (1 + 1 / (8 * sq(LN)));
+  const SWCYL = PI * (LT - LN);
+  const SW    = SWN + SWCYL;
+  const CFL   = (1.328 / sqrt(RE)) * Math.pow(1 + 0.12 * M2, -0.12);
+  const CDSFL = 1.2732 * SW * CFL;
+  const CDSFT = 1.2732 * SW * CFT;
+  const CDSF  = (CDSFL * SWN + CDSFT * SWCYL) / SW;
+  const CHI   = (M2 - 1) / (2.4 * M2);
+
+  let PTP;
+  if (M_num <= 1) PTP = Math.pow(1 + 0.2 * M2, 3.5);
+  else            PTP = Math.pow(1.2 * M2, 3.5) * Math.pow(6 / (7 * M2 - 1), 2.5);
+  const CMEP = (1.122 * (PTP - 1) * sq(DM)) / M2;
+
+  let CDHM;
+  if (M_num <= 0.91) CDHM = 0;
+  else if (M_num >= 1.41) CDHM = 0.85 * CMEP;
+  else CDHM = (0.254 + 2.88 * CHI) * CMEP;
+
+  let PB2;
+  if (M_num < 1) PB2 = 1 / (1 + 0.1875 * M2 + 0.0531 * sq(M2));
+  else           PB2 = 1 / (1 + 0.2477 * M2 + 0.0345 * sq(M2));
+  const PB4  = (1 + 0.09 * M2 * (1 - exp(LN - LT))) * (1 + 0.25 * M2 * (1 - DB));
+  const PBP1 = PB2 * PB4;
+  const CDB  = (1.4286 * (1 - PBP1) * sq(DB)) / M2;
+
+  const DBND = 1;
+  let CDBND;
+  if (M_num < 0.95) CDBND = Math.pow(M_num, 12.5) * (DBND - 1);
+  else              CDBND = (0.21 + 0.28 / M2) * (DBND - 1);
+
+  // Boattail drag
+  let CDBT = 0;
+  if (M_num <= 1) {
+    if (LBT_cal > 0 && M_num > 0.85) {
+      const TB   = (1 - DB) / (2 * LBT_cal);
+      const TB23 = 2 * sq(TB) + Math.pow(TB, 3);
+      const EBT  = exp(-2 * LBT_cal);
+      const BBT  = 1 - EBT + 2 * TB * (EBT * (LBT_cal + 0.5) - 0.5);
+      CDBT = 2 * TB23 * BBT * (1 / (0.564 + 1250 * sq(CHI)));
+    }
+    // Nose drag (subsonic)
+    const XMC = Math.pow(1 + 0.552 * Math.pow(TA, 0.8), -0.5);
+    let CDHT = 0;
+    if (M_num > XMC) CDHT = 0.368 * Math.pow(TA, 1.8) + 1.6 * TA * CHI;
+    const CDH = CDHT + CDHM;
+    const CDO = CDH + CDSF + CDBND + CDBT + CDB;
+
+    const KD1 = getKD1(M_num);
+    const KD7 = getKD7(M_num);
+    const KDX = CDO * PI / 8;
+    const I1  = KDX / KD1;
+    const I7  = KDX / KD7;
+    let C1v = SD / I1, C7v = SD / I7;
+    if (QATM === 1) { C1v *= 1.018; C7v *= 1.018; }
+
+    // Stability
+    const stab   = computeStability(BD, BL, NL, MD, RC, QR, QBT, BTL, BTA, ED, QED, QBC, SG, V, QATM);
+    // Wind drift
+    const wind   = computeWindDrift(C1v, V);
+    // Throat angle
+    const RBD    = parseFloat(document.getElementById('RBD').value);
+    const throat = computeThroatAngle(BD, BL, MD, NL, RC, QR, XC, YC, R, RBD);
+    const trans  = computeTransitionRadius(BD, BL, NL, XC, YC, R, RBD, throat ? throat.XX : null, QR);
+
+    return { B$, BD, BL, MD, NL, RC, R, XC, YC, LB, BTL, BTA, ED, QBT, QR, QBC, SG, W, SD, CG, C1: C1v, C7: C7v, V, QATM, stab, wind, throat, trans, RBD, calcWeight: QW === 0 };
+  } else {
+    // Supersonic
+    const BE2 = M2 - 1;
+    const BE  = sqrt(BE2);
+    const SSMC = 1 + 0.368 * Math.pow(TA, 1.85);
+    let ZE = BE;
+    if (M_num < SSMC) ZE = sqrt(sq(SSMC) - 1);
+    const C1c = 0.7156 - 0.5313 * RTR + 0.595 * sq(RTR);
+    const C2c = 0.0796 + 0.0779 * RTR;
+    const C3c = 1.587  + 0.049  * RTR;
+    const C4c = 0.1122 + 0.1658 * RTR;
+    const RZ2 = 1 / sq(ZE);
+    const CDHT = (C1c - C2c * sq(TA)) * RZ2 * Math.pow(TA * ZE, C3c + C4c * TA);
+    const CDH  = CDHT + CDHM;
+
+    if (LBT_cal > 0) {
+      const TB = (1 - DB) / (2 * LBT_cal);
+      if (M_num <= 1.1) {
+        const TB23 = 2 * sq(TB) + Math.pow(TB, 3);
+        const EBT  = exp(-2 * LBT_cal);
+        const BBT  = 1 - EBT + 2 * TB * (EBT * (LBT_cal + 0.5) - 0.5);
+        CDBT = 2 * TB23 * BBT * (1.774 - 9.3 * CHI);
+      } else {
+        const BB  = 0.85 / BE;
+        const AA2 = (5 * TA) / (6 * BE) + sq(0.5 * TA) - (0.7435 / M2) * Math.pow(TA * M_num, 1.6);
+        const AA1 = (1 - (0.6 * RTR / M_num)) * AA2;
+        const EXL = exp((-1.1952 / M_num) * (LT - LN - LBT_cal));
+        const XXM = ((2.4 * sq(M2) - 4 * BE2) * sq(TB)) / (2 * sq(BE2));
+        const AA  = AA1 * EXL - XXM + (2 * TB / BE);
+        const RB  = 1 / BB;
+        const EXBT = exp(-BB * LBT_cal);
+        const AAB  = 1 - EXBT + 2 * TB * (EXBT * (LBT_cal + RB) - RB);
+        CDBT = 4 * AA * TB * AAB * RB;
+      }
+    }
+
+    const CDO = CDH + CDSF + CDBND + CDBT + CDB;
+    const KD1 = getKD1(M_num);
+    const KD7 = getKD7(M_num);
+    const KDX = CDO * PI / 8;
+    const I1  = KDX / KD1;
+    const I7  = KDX / KD7;
+    let C1v = SD / I1, C7v = SD / I7;
+    if (QATM === 1) { C1v *= 1.018; C7v *= 1.018; }
+
+    const stab = computeStability(BD, BL, NL, MD, RC, QR, QBT, BTL, BTA, ED, QED, QBC, SG, V, QATM);
+    const wind = computeWindDrift(C1v, V);
+    const RBD    = parseFloat(document.getElementById('RBD').value);
+    const throat = computeThroatAngle(BD, BL, MD, NL, RC, QR, XC, YC, R, RBD);
+    const trans  = computeTransitionRadius(BD, BL, NL, XC, YC, R, RBD, throat ? throat.XX : null, QR);
+
+    return { B$, BD, BL, MD, NL, RC, R, XC, YC, LB, BTL, BTA, ED, QBT, QR, QBC, SG, W, SD, CG, C1: C1v, C7: C7v, V, QATM, stab, wind, throat, trans, RBD, calcWeight: QW === 0 };
+  }
+}
+
+// KD1 polynomials
+function getKD1(M) {
+  if (M < 0.059) return 0.099869208;
+  if (M <= 0.249) return 0.092991951 + 0.27488882*M - 0.4642319*sq(M) + 14.469294*Math.pow(M,3) - 20.951858*Math.pow(M,4);
+  if (M <= 0.839) return 0.12061834  - 0.2510435 *M + 0.77422485*sq(M) - 1.2845148*Math.pow(M,3) + 0.83553257*Math.pow(M,4);
+  if (M <= 1.069) return -0.060479641+ 4.5757437 *M - 14.35859*sq(M) + 15.444495*Math.pow(M,3) - 5.4131483*Math.pow(M,4);
+  if (M <= 1.63)  return -5.2655688  +14.573805  *M - 14.41555*sq(M) + 6.3472964*Math.pow(M,3) - 1.0518008*Math.pow(M,4);
+  if (M < 2.87)   return -0.025251509+ 0.62823143*M - 0.46416627*sq(M) + 0.13537077*Math.pow(M,3) - 0.014020406*Math.pow(M,4);
+  if (M <= 3.91)  return  1.0672197  - 0.9165249 *M + 0.36667112*sq(M) - 0.065823587*Math.pow(M,3) + 0.0044593727*Math.pow(M,4);
+  if (M <= 5)     return  0.18558444  + 0.033763944*M - 0.018500767*sq(M) + 0.0037071892*Math.pow(M,3) - 0.00025511889*Math.pow(M,4);
+  return 0.18558444; // fallback
+}
+
+// KD7 polynomials
+function getKD7(M) {
+  if (M <= 0.055)  return 0.0469878;
+  if (M <= 0.937)  return 0.047090974 - 4.137357e-3*M + 0.048467034*sq(M) - 0.13972469*Math.pow(M,3) + 0.11117174*Math.pow(M,4);
+  if (M <= 1.087)  return 725.8578 - 2866.4259*M + 4233.6837*sq(M) - 2771.8976*Math.pow(M,3) + 678.92125*Math.pow(M,4);
+  if (M <= 1.8)    return -0.65690102 + 2.3506886*M - 2.4325414*sq(M) + 1.07113*Math.pow(M,3) - 0.17312858*Math.pow(M,4);
+  if (M <= 3.93)   return  0.31506539 - 0.22927692*M + 0.10046774*sq(M) - 2.111136e-2*Math.pow(M,3) + 0.0016707016*Math.pow(M,4);
+  if (M <= 4.44)   return  1.4607388  - 1.2794659*M + 0.45373674*sq(M) - 0.072403838*Math.pow(M,3) + 0.0043483486*Math.pow(M,4);
+  return 0.16; // fallback
+}
+
+// Stability (MCGYRSA / McCoy)
+function computeStability(BD, BL, NL, MD, RC, QR, QBT, BTL, BTA, ED, QED, QBC, SG, V, QATM) {
+  let RO = QATM === 2 ? 1.0 : 0.982;
+
+  const L1 = BL / BD;
+  const L2 = NL / BD;
+  const D3 = MD / BD;
+  const DIFRAD2 = (BD - MD) / 2;
+  const RR2    = (sq(NL) + sq(DIFRAD2)) / (2 * DIFRAD2);
+  const RTCAL2 = RR2 / BD;
+  const RTR2   = QR === 1 ? 1 : RTCAL2 / RC;
+  const R1     = RTR2;
+
+  let LBT_cal, DB, D2;
+  if (QBT === 2) { LBT_cal = 0; ED = BD; DB = 1; D2 = 1; }
+  else {
+    LBT_cal = BTL / BD;
+    if (QED === 1) { ED = BD - 2 * (BTL * tan(BTA / 57.3)); DB = ED / BD; D2 = DB; }
+    else { DB = ED / BD; D2 = DB; }
+  }
+
+  let R10;
+  if (QBC === 1) R10 = 11.4;
+  else if (QBC === 2) R10 = 10.4;
+  else if (QBC === 3) R10 = 9.9;
+  else R10 = SG;
+
+  const M_s = V / 1116;
+  const M2s = sq(M_s);
+  const S1  = sqrt(1 - D3);
+  const S2  = 1 - sq(D2);
+
+  let G1;
+  if (M_s <= 0.95) G1 = 20.082 + 3.726 * (M_s / sqrt(1 - sq(M_s)));
+  else if (M_s >= 1.1) G1 = 35.079 - 24.066 * (sqrt(sq(M_s) - 1) / M_s);
+  else G1 = 71.73001 - 42.433 * M_s;
+  const A1s = G1 * S2;
+
+  let N15;
+  if (M_s < 1) {
+    const B1 = sqrt(1 - sq(M_s));
+    const B  = 0.82112 + 0.36971 * B1;
+    const A  = 34.779 + (24.091 + (8.977 - 12.804 * R1 + 8.38 * sq(R1)) * L2) * S1 * B1 - A1s;
+    N15 = (A * sqrt(R10)) / (Math.pow(L1, B) * RO);
+  } else {
+    const B1 = sqrt(sq(M_s) - 1) / M_s;
+    const B  = 1.0528 + 0.23379 * B1 - 0.004884 * (M_s - 1);
+    const A  = 58.873 + (8.115 + (14.15 - 15.348 * R1 + 7.216 * sq(R1)) * L2) * S1 * sq(B1) - A1s;
+    N15 = (A * sqrt(R10)) / (Math.pow(L1, B) * RO);
+  }
+
+  return { NINCH15: N15 * BD };
+}
+
+// Wind drift (Karpov / Davis)
+function computeWindDrift(C1, V) {
+  function drift(yards) {
+    const yFt  = yards * 3;
+    const K    = 2.878 / (C1 * sqrt(V));
+    const TF   = yFt / (V * (1 - (yards / 100) * 0.3 * K));
+    return 180 * (TF - yFt / V);
+  }
+  return { WD1: drift(100), WD2: drift(200), WD3: drift(300) };
+}
+
+// ============================================================
+// THROAT ANGLE  (THROAT.BAS — Daniel Lilja, 1990)
+// Returns angle in degrees per side at the point where the ogive
+// profile crosses the bore diameter, plus the axial length XX
+// from the ogive/bearing junction to that contact point.
+// ============================================================
+function computeThroatAngle(BD, BL, MD, NL, RC, QR, XC, YC, R, RBD) {
+  const C   = (BD - MD) / 2;
+  const LHT = (BD - RBD) / 2;   // land height
+  let   XX;                      // axial distance from ogive-bearing junc to contact pt
+
+  if (QR === 1) {
+    // Tangent ogive: closed-form  (line 130 of THROAT.BAS)
+    const CC = (BD - RBD) / 2;
+    XX = sqrt(Math.max(0, R * 2 * CC - sq(CC)));
+  } else {
+    // Secant ogive: 5000-disc search (lines 260–340)
+    const BDY  = BD / 2 - LHT;          // y-coord of bore radius
+    const XSEC = BL - NL - XC;          // offset from ogive-radius origin
+    const step = NL / 5000;
+    let xxCur  = NL / 10000 + XSEC;     // start at half a disc thickness
+
+    XX = NL; // fallback: full ogive length (contact never found)
+    for (let d = 1; d <= 5000; d++) {
+      const y = sqrt(Math.max(0, sq(R) - sq(xxCur))) - YC; // note: YC stored negative, so subtract
+      if (y <= BDY) {
+        XX = xxCur - XSEC;
+        break;
+      }
+      xxCur += step;
+    }
+  }
+
+  // Throat angle (degrees per side) — line 350
+  if (XX <= 0) return { ANG: null, XX: null };
+  const ANG = Math.atan(LHT / XX) * 57.3;
+  return { ANG, XX };
+}
+
+// ============================================================
+// TRANSITION RADIUS
+// Computes the radius of a circular arc that:
+//   • is internally tangent to the secant ogive arc at the point
+//     on the arc directly above the transition arc centre
+//   • is tangent to the bearing cylinder (y = BD/2) with its
+//     centre positioned on the vertical through the bearing/ogive
+//     junction  (x = xA)
+//
+// This enforces the hard constraint that the arc centre's x is
+// fixed at xA — making the bearing tangency point exactly at the
+// ogive/bearing junction — and derives r_t from internal tangency
+// with the secant arc.
+//
+// Coordinate frame: origin at the secant ogive radius centre,
+//   x  — axial (increasing toward meplat)
+//   y  — radial (increasing away from bore axis)
+//
+// Known:
+//   Secant arc centre   S = (0,   Cy)   Cy = −YC  (> 0)
+//   Bearing junction    A = (xA,  BD/2)  xA = XSEC = BL−NL−XC
+//
+// Unknowns:
+//   r_t  — transition radius
+//   T    — transition arc centre = (xA,  BD/2 − r_t)   [x fixed, y from bearing tangency]
+//
+// Internal tangency condition (transition arc inside secant arc):
+//   |S − T|  =  R − r_t
+//
+//   |S − T|² = xA² + (Cy − (BD/2 − r_t))²
+//             = xA² + (Cy − BD/2 + r_t)²
+//
+//   Let  dy = Cy − BD/2   (signed; usually negative for a well-
+//             formed bullet, because the secant centre is close to
+//             or below the bullet surface)
+//
+//   xA² + (dy + r_t)² = (R − r_t)²
+//   xA² + dy² + 2·dy·r_t + r_t² = R² − 2R·r_t + r_t²
+//
+//   r_t² cancels:
+//   xA² + dy² + 2·dy·r_t = R² − 2R·r_t
+//   r_t·(2dy + 2R) = R² − xA² − dy²
+//
+//   r_t = (R² − xA² − dy²) / (2·(R + dy))
+//
+// The secant tangency point P is the intersection of the secant arc
+// and the line S→T, on the side of T:
+//   direction  d̂ = (T − S) / |T − S|
+//   P = S + R · d̂
+// ============================================================
+function computeTransitionRadius(BD, BL, NL, XC, YC, R, RBD, throatXX, QR) {
+  if (QR !== 2) return null;
+
+  const XSEC = BL - NL - XC;        // x of bearing/ogive junction in ogive-origin frame
+  const Cy   = -YC;                  // y of secant arc centre (stored negative, so negate)
+  const xA   = XSEC;
+  const yA   = BD / 2;
+
+  const dy   = Cy - yA;             // Cy − BD/2
+  const denom = 2 * (R + dy);
+  if (Math.abs(denom) < 1e-12) return null;  // degenerate (secant centre at bearing surface)
+
+  const r_t = (sq(R) - sq(xA) - sq(dy)) / denom;
+  if (r_t <= 0) return null;        // geometry not achievable — secant too tight
+
+  // Transition arc centre
+  const xT = xA;
+  const yT = yA - r_t;
+
+  // Secant tangency point P — on the secant arc along S→T
+  const dST_x = xT - 0;            // vector from S to T
+  const dST_y = yT - Cy;
+  const dST   = sqrt(sq(dST_x) + sq(dST_y));
+  if (dST < 1e-12) return null;
+
+  const px = 0  + R * (dST_x / dST);   // P = S + R·d̂
+  const py = Cy + R * (dST_y / dST);
+
+  // Axial position of P relative to the bearing/ogive junction
+  // (positive = toward meplat, i.e. up the ogive)
+  const pxFromJunc = px - xA;
+
+  // Verify: distance from T to P should equal r_t
+  const checkDist = sqrt(sq(px - xT) + sq(py - yT));
+
+  return {
+    r_t,                     // transition radius (inches)
+    r_t_cal: r_t / BD,       // in calibers
+    xT, yT,                  // transition arc centre (ogive-origin frame)
+    px, py,                  // secant tangency point (ogive-origin frame)
+    pxFromJunc,              // axial dist of secant tangency point from bearing junc (inches)
+    xA, yA,                  // bearing tangency point (= bearing/ogive junction exactly)
+    checkDist,               // should equal r_t — internal consistency check
+    XSEC,
+    Cy,
+  };
+}
+
+// ============================================================
+// RENDER RESULTS
+// ============================================================
+function getConstructionLabel(qbc, sg) {
+  if (qbc === 1) return 'Lead Core · Jacketed HP';
+  if (qbc === 2) return 'Lead Core · Jacketed SP/FMJ';
+  if (qbc === 3) return 'Steel Core · Jacketed FMJ';
+  return `Monolithic / Other (SG=${sg.toFixed(2)})`;
+}
+
+function renderResults(r) {
+  const atmLabel = r.QATM === 2 ? "ICAO SL" : "Std Metro SL";
+  const btLabel  = r.QBT === 1
+    ? `${fmt(r.BTL, 3)}" @ ${fmt(r.BTA, 1)}° (end Ø ${fmt(r.ED, 3)}")`
+    : 'Flat Base';
+  const ogiveLabel = r.QR === 1 ? 'Tangent' : 'Secant';
+
+  const html = `
+    <div class="id-tag">${r.B$}</div>
+    <div class="construction-tag">${getConstructionLabel(r.QBC, r.SG)}</div>
+
+    <div class="result-grid">
+
+      <!-- GEOMETRY -->
+      <div class="result-section">
+        <div class="result-section-title">Geometry</div>
+        <div class="result-row"><span class="result-key">Bullet Diameter</span><span class="result-val">${fmt(r.BD, 3)}"</span></div>
+        <div class="result-row"><span class="result-key">Overall Length</span><span class="result-val">${fmt(r.BL, 3)}"</span></div>
+        <div class="result-row"><span class="result-key">Meplat Diameter</span><span class="result-val">${fmt(r.MD, 3)}"</span></div>
+        <div class="result-row"><span class="result-key">Ogive Type</span><span class="result-val amber">${ogiveLabel}</span></div>
+        <div class="result-row"><span class="result-key">Ogive Radius</span><span class="result-val">${fmt(r.RC, 1)} cal / ${fmt(r.R, 3)}"</span></div>
+        <div class="result-row"><span class="result-key">Ogive Length</span><span class="result-val">${fmt(r.NL, 3)}" (${fmt(r.NL/r.BD, 2)} cal)</span></div>
+        <div class="result-row"><span class="result-key">Bearing Length</span><span class="result-val">${fmt(r.LB, 3)}" (${fmt(r.LB/r.BD, 2)} cal)</span></div>
+        <div class="result-row"><span class="result-key">Boattail</span><span class="result-val amber" style="font-size:10px;max-width:160px;text-align:right;">${btLabel}</span></div>
+      </div>
+
+      <!-- MASS & DENSITY -->
+      <div class="result-section">
+        <div class="result-section-title">Mass & Density</div>
+        <div class="result-row">
+          <span class="result-key">${r.calcWeight ? 'Calculated Weight' : 'Entered Weight'}</span>
+          <span class="result-val">${fmt(r.W, 1)} gr</span>
+        </div>
+        <div class="result-row"><span class="result-key">Sectional Density</span><span class="result-val">${fmt(r.SD, 3)}</span></div>
+        <div class="result-row"><span class="result-key">Specific Gravity</span><span class="result-val">${fmt(r.SG, 2)}</span></div>
+        <div class="result-row"><span class="result-key">CG (ahead of base)</span><span class="result-val">${fmt(r.CG, 3)}"</span></div>
+        <div class="result-row"><span class="result-key">Ogive Centre X (base)</span><span class="result-val">${fmt(r.XC, 3)}"</span></div>
+        <div class="result-row"><span class="result-key">Ogive Centre Y (axis)</span><span class="result-val">${fmt(r.YC, 3)}"</span></div>
+        <div class="result-row"><span class="result-key">Muzzle Velocity</span><span class="result-val blue">${r.V} fps</span></div>
+        <div class="result-row"><span class="result-key">Atmosphere</span><span class="result-val blue">${atmLabel}</span></div>
+      </div>
+
+      <!-- BC -->
+      <div class="result-section">
+        <div class="result-section-title">Ballistic Coefficient</div>
+        <div class="result-bc-row">
+          <div class="result-bc-item">
+            <div class="result-bc-label">G1 (C1)</div>
+            <div class="result-bc-value">${fmt(r.C1, 3)}</div>
+          </div>
+          <div class="result-bc-item">
+            <div class="result-bc-label">G7 (C7)</div>
+            <div class="result-bc-value">${fmt(r.C7, 3)}</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-size:10px;color:var(--text-dim);">
+          @ ${r.V} fps · ${atmLabel}
+        </div>
+      </div>
+
+      <!-- STABILITY -->
+      <div class="result-section">
+        <div class="result-section-title">Gyroscopic Stability</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:8px;">Twist for Sg = 1.5</div>
+        <div class="twist-highlight">
+          <div>
+            <div class="twist-label">Required Barrel Twist</div>
+            <div style="font-size:10px;color:var(--text-dim);">@ ${r.V} fps · ${atmLabel}</div>
+          </div>
+          <div style="text-align:right;">
+            <span class="twist-value">1:${fmt(r.stab.NINCH15, 1)}</span>
+            <span class="twist-unit"> in/turn</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- WIND DRIFT -->
+      <div class="result-section" style="grid-column:span 2;">
+        <div class="result-section-title">Wind Drift — 10 mph Crosswind</div>
+        <div class="result-wind-row">
+          <div class="result-wind-item">
+            <div class="result-wind-label">100 yds</div>
+            <div class="result-wind-value">${fmt(r.wind.WD1, 1)}</div>
+            <div class="result-wind-unit">inches</div>
+          </div>
+          <div class="result-wind-item">
+            <div class="result-wind-label">200 yds</div>
+            <div class="result-wind-value">${fmt(r.wind.WD2, 1)}</div>
+            <div class="result-wind-unit">inches</div>
+          </div>
+          <div class="result-wind-item">
+            <div class="result-wind-label">300 yds</div>
+            <div class="result-wind-value">${fmt(r.wind.WD3, 1)}</div>
+            <div class="result-wind-unit">inches</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THROAT ANGLE -->
+      <div class="result-section" style="grid-column:span 2;">
+        <div class="result-section-title">Throat Angle — THROAT.BAS (Lilja, 1990)</div>
+        ${r.throat && r.throat.ANG !== null ? `
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:4px;">
+          <div class="result-bc-item" style="border-color:rgba(74,255,154,0.2);background:rgba(74,255,154,0.04);">
+            <div class="result-bc-label">Throat Angle</div>
+            <div class="result-bc-value" style="color:var(--green);">${fmt(r.throat.ANG, 2)}°</div>
+            <div style="font-size:9px;color:var(--text-dim);margin-top:2px;">per side</div>
+          </div>
+          <div class="result-bc-item" style="border-color:rgba(74,255,154,0.2);background:rgba(74,255,154,0.04);">
+            <div class="result-bc-label">Axial Contact Length</div>
+            <div class="result-bc-value" style="color:var(--green);font-size:18px;">${fmt(r.throat.XX, 4)}"</div>
+            <div style="font-size:9px;color:var(--text-dim);margin-top:2px;">ogive junc → bore Ø</div>
+          </div>
+          <div class="result-bc-item" style="border-color:rgba(74,255,154,0.2);background:rgba(74,255,154,0.04);">
+            <div class="result-bc-label">Bore Diameter</div>
+            <div class="result-bc-value" style="color:var(--green);font-size:18px;">${fmt(r.RBD, 4)}"</div>
+            <div style="font-size:9px;color:var(--text-dim);margin-top:2px;">land height ${fmt((r.BD-r.RBD)/2*1000,1)} thou</div>
+          </div>
+        </div>
+        ${r.QR === 2 && r.trans ? `
+        <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border);">
+          <div style="font-family:var(--sans);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--amber);margin-bottom:10px;">
+            Secant→Bearing Transition Arc
+          </div>
+          <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px;line-height:1.6;">
+            Arc centre is fixed on the vertical through the ogive/bearing junction (x = xA).
+            Bearing tangency is exact at the junction. Internal tangency with the secant arc
+            occurs at the point on the secant arc along the line from the secant centre through T.
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+            <div class="result-bc-item" style="border-color:rgba(255,179,71,0.4);background:rgba(255,179,71,0.06);">
+              <div class="result-bc-label">Transition Radius</div>
+              <div class="result-bc-value" style="color:var(--amber);font-size:20px;">${fmt(r.trans.r_t, 4)}"</div>
+              <div style="font-size:9px;color:var(--text-dim);margin-top:2px;">${fmt(r.trans.r_t_cal, 3)} cal</div>
+            </div>
+            <div class="result-bc-item" style="border-color:rgba(255,179,71,0.2);background:rgba(255,179,71,0.03);">
+              <div class="result-bc-label">Arc Centre</div>
+              <div class="result-bc-value" style="color:var(--amber);font-size:13px;margin-top:4px;">x = ${fmt(r.trans.xT, 4)}"</div>
+              <div class="result-bc-value" style="color:var(--amber);font-size:13px;">y = ${fmt(r.trans.yT, 4)}"</div>
+              <div style="font-size:9px;color:var(--text-dim);margin-top:2px;">ogive-origin frame</div>
+            </div>
+            <div class="result-bc-item" style="border-color:rgba(255,179,71,0.2);background:rgba(255,179,71,0.03);">
+              <div class="result-bc-label">Secant Tangency Point</div>
+              <div class="result-bc-value" style="color:var(--amber);font-size:13px;margin-top:4px;">x = ${fmt(r.trans.px, 4)}"</div>
+              <div class="result-bc-value" style="color:var(--amber);font-size:13px;">y = ${fmt(r.trans.py, 4)}"</div>
+              <div style="font-size:9px;color:var(--text-dim);margin-top:2px;">${fmt(r.trans.pxFromJunc, 4)}" from bearing junc</div>
+            </div>
+            <div class="result-bc-item" style="border-color:rgba(255,179,71,0.2);background:rgba(255,179,71,0.03);">
+              <div class="result-bc-label">Consistency Check</div>
+              <div class="result-bc-value" style="color:${Math.abs(r.trans.checkDist - r.trans.r_t) < 1e-6 ? 'var(--green)' : 'var(--red)'};font-size:13px;margin-top:4px;">|T→P| = ${fmt(r.trans.checkDist, 5)}"</div>
+              <div class="result-bc-value" style="color:var(--text-dim);font-size:12px;">r_t  = ${fmt(r.trans.r_t, 5)}"</div>
+              <div style="font-size:9px;color:var(--text-dim);margin-top:2px;">should be equal</div>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:10px;color:var(--text-dim);line-height:1.8;padding:8px 10px;background:rgba(0,0,0,0.3);border:1px solid var(--border);">
+            <span style="color:var(--amber);">Bearing tangency</span> — exactly at ogive/bearing junction: x=${fmt(r.trans.xA,4)}", y=${fmt(r.trans.yA,4)}"
+            &nbsp;·&nbsp;
+            <span style="color:var(--amber);">Secant tangency</span> — on arc at ${fmt(r.trans.pxFromJunc,4)}" axially toward meplat from junction
+            &nbsp;·&nbsp;
+            <span style="color:var(--text-dim);">r_t = (R²−xA²−dy²) / 2(R+dy) &nbsp;where dy = Cy−BD/2</span>
+          </div>
+        </div>
+        ` : r.QR === 2 ? `<div style="font-size:11px;color:var(--red);margin-top:10px;">⚠ Transition radius could not be computed — secant ogive geometry may be degenerate (r_t ≤ 0).</div>` : `
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-size:10px;color:var(--text-dim);">
+          Transition arc calculation applies to secant ogives only.
+        </div>`}
+        ` : `<div style="font-size:11px;color:var(--red);margin-top:6px;">⚠ Could not resolve throat contact point — check bore diameter is less than bullet diameter.</div>`}
+      </div>
+
+      <!-- PROFILE SKETCH -->
+      <div class="ogive-canvas-wrap">
+        <div class="canvas-label">Bullet Profile (schematic)</div>
+        <canvas id="ogiveCanvas" width="800" height="160"></canvas>
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById('resultsContainer').innerHTML = html;
+  drawBullet(r);
+}
+
+// ============================================================
+// CANVAS BULLET SKETCH
+// ============================================================
+function drawBullet(r) {
+  const canvas = document.getElementById('ogiveCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Scale: fit bullet into canvas with margin
+  const margin = 20;
+  const scale = (W - margin * 2) / r.BL;
+  const midY  = H / 2;
+  const halfH = (r.BD / 2) * scale;
+
+  // Helpful: x on canvas = margin + (BL - x_from_base) * scale
+  function canX(xFromBase) { return margin + xFromBase * scale; }
+  function canY(offset)     { return midY + offset * scale; }
+
+  ctx.lineWidth   = 1.5;
+  ctx.strokeStyle = '#4aff9a';
+  ctx.fillStyle   = 'rgba(74,255,154,0.05)';
+  ctx.shadowColor = '#4aff9a';
+  ctx.shadowBlur  = 6;
+
+  // Draw upper profile path
+  ctx.beginPath();
+
+  // Start at base (right side = BL from muzzle tip)
+  const baseX = canX(0);
+  ctx.moveTo(baseX, canY(-halfH));
+
+  // Boattail? draw from base up to boattail/bearing junction
+  if (r.QBT === 1 && r.BTL > 0) {
+    const btEndX   = canX(r.BTL);
+    const btEndHalf = (r.BD / 2) * scale;
+    const btStartHalf = (r.ED / 2) * scale;
+    // base end diameter
+    ctx.lineTo(baseX, canY(-btStartHalf));
+    ctx.lineTo(btEndX, canY(-btEndHalf));
+  }
+
+  // Bearing cylinder
+  const bearingEndX = canX(r.LB + (r.QBT === 1 ? r.BTL : 0));
+  ctx.lineTo(bearingEndX, canY(-halfH));
+
+  // Ogive: draw as polyline (30 pts)
+  const ogivePts = 40;
+  const DIFRAD = (r.BD - r.MD) / 2;
+  const XSEC = (r.QR === 2) ? (r.BL - r.NL - r.XC) : 0;
+
+  for (let i = 0; i <= ogivePts; i++) {
+    const t  = i / ogivePts;
+    const xo = XSEC + t * r.NL; // distance from ogive radius centre origin
+    const yRadius = Math.sqrt(Math.max(0, r.R * r.R - xo * xo)) + r.YC;
+    const xFromBase = r.LB + (r.QBT === 1 ? r.BTL : 0) + (r.NL - (t * r.NL));
+    ctx.lineTo(canX(xFromBase), canY(-yRadius * scale));
+  }
+
+  // Meplat tip (close to centreline)
+  const meplat = canX(r.BL);
+  ctx.lineTo(meplat, canY(-(r.MD / 2) * scale));
+
+  // Mirror lower half
+  ctx.lineTo(meplat, canY(+(r.MD / 2) * scale));
+
+  for (let i = ogivePts; i >= 0; i--) {
+    const t  = i / ogivePts;
+    const xo = XSEC + t * r.NL;
+    const yRadius = Math.sqrt(Math.max(0, r.R * r.R - xo * xo)) + r.YC;
+    const xFromBase = r.LB + (r.QBT === 1 ? r.BTL : 0) + (r.NL - (t * r.NL));
+    ctx.lineTo(canX(xFromBase), canY(+yRadius * scale));
+  }
+
+  ctx.lineTo(bearingEndX, canY(+halfH));
+
+  if (r.QBT === 1 && r.BTL > 0) {
+    const btEndHalf   = (r.BD / 2) * scale;
+    const btStartHalf = (r.ED / 2) * scale;
+    ctx.lineTo(baseX, canY(+btStartHalf));
+    ctx.lineTo(baseX, canY(+(r.ED / 2) * scale));
+  } else {
+    ctx.lineTo(baseX, canY(+halfH));
+  }
+
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // CG marker
+  const cgX = canX(r.CG);
+  ctx.beginPath();
+  ctx.strokeStyle = '#ffb347';
+  ctx.shadowColor = '#ffb347';
+  ctx.shadowBlur  = 4;
+  ctx.lineWidth   = 1;
+  ctx.setLineDash([3, 3]);
+  ctx.moveTo(cgX, midY - halfH - 8);
+  ctx.lineTo(cgX, midY + halfH + 8);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // CG label
+  ctx.fillStyle   = '#ffb347';
+  ctx.shadowBlur  = 0;
+  ctx.font        = '10px Share Tech Mono';
+  ctx.textAlign   = 'center';
+  ctx.fillText('CG', cgX, midY - halfH - 12);
+
+  // Centreline
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(74,255,154,0.15)';
+  ctx.lineWidth   = 0.5;
+  ctx.setLineDash([5, 5]);
+  ctx.moveTo(margin, midY);
+  ctx.lineTo(W - margin, midY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// Init
+updateOgiveFields();
+updateBTFields();
+updateBTSpec();
+updateConstruction();
+</script>
+
+</body>
+</html>
